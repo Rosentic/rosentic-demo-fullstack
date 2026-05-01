@@ -1,0 +1,43 @@
+type Query {
+  user(id: ID!): User
+  users: [User!]!
+  orders(userId: ID!): [Order!]!
+}
+
+type Mutation {
+  createUser(input: CreateUserInput!): User!
+  createOrder(input: CreateOrderInput!): Order!
+}
+
+type User {
+  id: ID!
+  name: String!
+  email: String!
+  avatar: String
+  orders: [Order!]!
+}
+
+type Order {
+  id: ID!
+  productId: String!
+  quantity: Int!
+  status: OrderStatus!
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  SHIPPED
+  DELIVERED
+}
+
+input CreateUserInput {
+  name: String!
+  email: String!
+}
+
+input CreateOrderInput {
+  userId: ID!
+  productId: String!
+  quantity: Int!
+}
