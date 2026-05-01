@@ -29,6 +29,11 @@ def create_user(name: str, email: str) -> dict:
     return user
 
 
+@router.get("/api/users/{id}")
+async def get_user_endpoint(id: int):
+    return {"id": id, "name": "Alice", "email": "alice@example.com"}
+
+
 @router.post("/api/users", response_model=UserResponse)
 async def create_user_endpoint(request: UserCreateRequest):
     try:
