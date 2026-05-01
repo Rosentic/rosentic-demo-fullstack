@@ -1,7 +1,7 @@
 openapi: "3.0.3"
 info:
   title: Rosentic Demo API
-  version: "1.0.0"
+  version: "2.0.0"
   description: Fullstack demo API for order management
 
 servers:
@@ -9,7 +9,7 @@ servers:
     description: Local development
 
 paths:
-  /api/users:
+  /api/v2/users:
     get:
       summary: List all users
       operationId: listUsers
@@ -23,12 +23,12 @@ paths:
                 items:
                   $ref: "#/components/schemas/User"
 
-  /api/users/{id}:
+  /api/v2/users/{userId}:
     get:
       summary: Get a user by ID
       operationId: getUser
       parameters:
-        - name: id
+        - name: userId
           in: path
           required: true
           schema:
@@ -69,6 +69,7 @@ components:
         - id
         - name
         - email
+        - role
       properties:
         id:
           type: integer
@@ -76,12 +77,15 @@ components:
           type: string
         email:
           type: string
+        role:
+          type: string
 
     CreateOrderRequest:
       type: object
       required:
         - product_id
         - quantity
+        - shipping_address
       properties:
         product_id:
           type: string
@@ -90,6 +94,9 @@ components:
           type: integer
           description: Number of items
           minimum: 1
+        shipping_address:
+          type: string
+          description: Delivery address
 
     Order:
       type: object
