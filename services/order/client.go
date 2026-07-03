@@ -55,3 +55,19 @@ func (c *Client) GetOrder(ctx context.Context, id int64) (*pb.OrderResponse, err
 	}
 	return resp, nil
 }
+
+func (c *Client) CreateBulkOrders(ctx context.Context, items []struct {
+	ProductID string
+	Quantity  int32
+	Priority  string
+}) ([]*pb.OrderResponse, error) {
+	var results []*pb.OrderResponse
+	for _, item := range items {
+		resp, err := c.CreateOrder(ctx, item.ProductID, item.Quantity, item.Priority)
+		if err != nil {
+			return results, fmt.Errorf("bulk order failed at product %s: %w", item.ProductID, err)
+		}
+		results = append(results, resp)
+	}
+	return results, nil
+}
