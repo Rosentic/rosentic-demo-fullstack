@@ -22,3 +22,4 @@ def send_trial_followups(user_id: str, team_ids: list[str]):
     """Send onboarding reminders for a trial account."""
     send_notification(user_id, "Your trial workspace is ready")
     send_bulk_notifications(team_ids, "A teammate has opened a trial workspace")
+    send_notification(user_id, "Your setup checklist is still waiting")
