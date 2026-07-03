@@ -1,9 +1,9 @@
 """Notification service — sends emails and push notifications."""
 
 
-def send_notification(user_id: str, message: str) -> bool:
+def send_notification(user_id: str, message: str, channel: str) -> bool:
     """Send a notification to a user."""
-    print(f"Sending notification to {user_id}: {message}")
+    print(f"Sending {channel} notification to {user_id}: {message}")
     return True
 
 
