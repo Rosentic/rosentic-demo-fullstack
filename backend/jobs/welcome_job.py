@@ -16,3 +16,9 @@ def remind_inactive_users(user_ids: list):
     failed = [uid for uid, ok in results.items() if not ok]
     if failed:
         print(f"Failed to notify {len(failed)} users: {failed}")
+
+
+def send_trial_followups(user_id: str, team_ids: list[str]):
+    """Send onboarding reminders for a trial account."""
+    send_notification(user_id, "Your trial workspace is ready")
+    send_bulk_notifications(team_ids, "A teammate has opened a trial workspace")
