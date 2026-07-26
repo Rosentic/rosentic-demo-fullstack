@@ -42,6 +42,18 @@ paths:
                 $ref: "#/components/schemas/User"
 
   /api/orders:
+    get:
+      summary: List orders
+      operationId: listOrders
+      responses:
+        "200":
+          description: A list of orders
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Order"
     post:
       summary: Create a new order
       operationId: createOrder

@@ -36,6 +36,10 @@
     {
       "method": "GET",
       "path": "/api/v2/users"
+    },
+    {
+      "method": "GET",
+      "path": "/api/orders"
     }
   ],
   "openapi_requests": [
