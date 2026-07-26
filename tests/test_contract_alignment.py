@@ -8,6 +8,7 @@ from pathlib import Path
 
 import yaml
 from graphql import build_schema, get_operation_ast, get_variable_values, parse, validate
+from graphql.language.ast import DocumentNode
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -133,9 +134,10 @@ class DemoContractProof(unittest.TestCase):
                     document = parse(
                         (ROOT / operation_case["file"]).read_text(encoding="utf-8")
                     )
-                    self.assertEqual([], validate(schema, document))
                     operation = get_operation_ast(document, operation_case["operation"])
                     self.assertIsNotNone(operation)
+                    operation_document = DocumentNode(definitions=(operation,))
+                    self.assertEqual([], validate(schema, operation_document))
                     variable_result = get_variable_values(
                         schema,
                         operation.variable_definitions,
@@ -163,4 +165,3 @@ class DemoContractProof(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-
