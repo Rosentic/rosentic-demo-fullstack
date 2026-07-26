@@ -1,0 +1,17 @@
+{
+  "name": "trial reminder consumer",
+  "python_calls": [
+    {
+      "call": "backend.jobs.trial_reminder:remind_trial_owner",
+      "args": ["user-3"]
+    }
+  ],
+  "source_contains": [
+    {
+      "file": "backend/jobs/trial_reminder.py",
+      "needles": [
+        "send_notification(user_id, \"Your trial workspace expires tomorrow\")"
+      ]
+    }
+  ]
+}
