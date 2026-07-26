@@ -1,0 +1,6 @@
+.rosentic/
+.rosentic-*.json
+.rosentic-demo-scan-*.json
+__pycache__/
+*.pyc
+
