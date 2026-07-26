@@ -1,0 +1,99 @@
+{
+  "name": "base contracts and consumers",
+  "python_calls": [
+    {
+      "call": "backend.services.notifications:send_notification",
+      "args": ["user-1", "Welcome"],
+      "expected": true
+    },
+    {
+      "call": "backend.services.notifications:send_bulk_notifications",
+      "args": [["user-1", "user-2"], "Welcome"],
+      "expected": {
+        "user-1": true,
+        "user-2": true
+      }
+    },
+    {
+      "call": "backend.services.user_service:create_user",
+      "args": ["Ada", "ada@example.com"],
+      "expected_subset": {
+        "name": "Ada",
+        "email": "ada@example.com"
+      }
+    }
+  ],
+  "http_requests": [
+    {
+      "method": "POST",
+      "path": "/api/users"
+    },
+    {
+      "method": "GET",
+      "path": "/api/users/42"
+    },
+    {
+      "method": "GET",
+      "path": "/api/users"
+    }
+  ],
+  "openapi_requests": [
+    {
+      "method": "POST",
+      "path": "/api/orders",
+      "body": {
+        "product_id": "sku-1",
+        "quantity": 2
+      }
+    }
+  ],
+  "graphql_operations": [
+    {
+      "file": "frontend/src/graphql/queries.graphql",
+      "operation": "GetUser",
+      "variables": {
+        "id": "user-1"
+      }
+    },
+    {
+      "file": "frontend/src/graphql/queries.graphql",
+      "operation": "ListUsers",
+      "variables": {}
+    },
+    {
+      "file": "frontend/src/graphql/queries.graphql",
+      "operation": "CreateUser",
+      "variables": {
+        "input": {
+          "name": "Ada",
+          "email": "ada@example.com"
+        }
+      }
+    }
+  ],
+  "proto_fields": [
+    {
+      "message": "OrderRequest",
+      "fields": ["product_id", "quantity", "priority"]
+    },
+    {
+      "message": "OrderResponse",
+      "fields": ["id", "product_id", "quantity", "priority", "status"]
+    }
+  ],
+  "source_contains": [
+    {
+      "file": "frontend/src/api/users.ts",
+      "needles": ["/api/users"]
+    },
+    {
+      "file": "frontend/src/api/orders.ts",
+      "needles": ["product_id", "quantity"]
+    },
+    {
+      "file": "services/order/client.go",
+      "needles": ["Priority:", "resp.Priority"]
+    }
+  ]
+}
+
