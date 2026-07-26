@@ -1,9 +1,11 @@
 import axios from "axios";
 import { z } from "zod";
 
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
+
 export const LegacyCreateOrderSchema = z.object({
   product_id: z.string(),
-  quantity: z.number().min(1),
+  quantity: z.number().int().min(1),
 });
 
 export type LegacyCreateOrderPayload = z.infer<typeof LegacyCreateOrderSchema>;
@@ -19,6 +21,6 @@ export async function createLegacyOrder(
   payload: LegacyCreateOrderPayload
 ): Promise<LegacyOrder> {
   const validated = LegacyCreateOrderSchema.parse(payload);
-  const response = await axios.post("/api/orders", validated);
+  const response = await axios.post(`${API_BASE}/api/orders`, validated);
   return response.data;
 }

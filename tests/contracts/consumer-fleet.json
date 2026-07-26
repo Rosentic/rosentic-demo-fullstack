@@ -86,7 +86,7 @@
     },
     {
       "file": "frontend/src/api/legacy_orders.ts",
-      "needles": ["product_id", "quantity"]
+      "needles": ["product_id", "quantity", ".int()"]
     },
     {
       "file": "frontend/src/graphql/legacy_queries.graphql",
