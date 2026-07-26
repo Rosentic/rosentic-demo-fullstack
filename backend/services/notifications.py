@@ -7,9 +7,9 @@ def send_notification(user_id: str, message: str, channel: str) -> bool:
     return True
 
 
-def send_bulk_notifications(user_ids: list, message: str) -> dict:
-    """Send notifications to multiple users."""
+def send_bulk_notifications(user_ids: list, message: str, channel: str) -> dict:
+    """Send notifications to multiple users through the selected channel."""
     results = {}
     for uid in user_ids:
-        results[uid] = send_notification(uid, message)
+        results[uid] = send_notification(uid, message, channel)
     return results

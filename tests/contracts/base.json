@@ -3,12 +3,12 @@
   "python_calls": [
     {
       "call": "backend.services.notifications:send_notification",
-      "args": ["user-1", "Welcome"],
+      "args": ["user-1", "Welcome", "email"],
       "expected": true
     },
     {
       "call": "backend.services.notifications:send_bulk_notifications",
-      "args": [["user-1", "user-2"], "Welcome"],
+      "args": [["user-1", "user-2"], "Welcome", "email"],
       "expected": {
         "user-1": true,
         "user-2": true
@@ -96,4 +96,3 @@
     }
   ]
 }
-
