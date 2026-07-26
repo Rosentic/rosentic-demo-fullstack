@@ -1,12 +1,4 @@
-import axios from "axios";
-import { z } from "zod";
-
-export const CreateOrderSchema = z.object({
-  product_id: z.string(),
-  quantity: z.number().min(1),
-});
-
-export type CreateOrderPayload = z.infer<typeof CreateOrderSchema>;
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
 
 export interface Order {
   id: number;
@@ -15,17 +7,36 @@ export interface Order {
   status: "pending" | "confirmed" | "shipped" | "delivered";
 }
 
-export async function createOrder(payload: CreateOrderPayload): Promise<Order> {
-  const validated = CreateOrderSchema.parse(payload);
-  const response = await axios.post("/api/orders", validated);
-  return response.data;
+export interface CreateOrderPayload {
+  product_id: string;
+  quantity: number;
+}
+
+export async function createOrder(
+  payload: CreateOrderPayload
+): Promise<Order> {
+  const response = await fetch(`${API_BASE}/api/orders`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      product_id: payload.product_id,
+      quantity: payload.quantity,
+    }),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to create order: ${response.statusText}`);
+  }
+
+  return response.json();
 }
 
 export async function getOrders(): Promise<Order[]> {
-  const response = await axios.get("/api/orders");
-  return response.data;
-}
+  const response = await fetch(`${API_BASE}/api/orders`);
 
-export async function cancelOrder(orderId: number): Promise<void> {
-  await axios.post("/api/orders/" + orderId + "/cancel");
+  if (!response.ok) {
+    throw new Error(`Failed to list orders: ${response.statusText}`);
+  }
+
+  return response.json();
 }

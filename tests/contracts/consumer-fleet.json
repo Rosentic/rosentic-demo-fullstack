@@ -1,0 +1,100 @@
+{
+  "name": "consumer fleet against base contracts",
+  "python_calls": [
+    {
+      "call": "backend.jobs.welcome_job:welcome_new_user",
+      "args": ["user-3", "Grace"]
+    },
+    {
+      "call": "backend.jobs.welcome_job:remind_inactive_users",
+      "args": [["user-4", "user-5"]]
+    },
+    {
+      "call": "backend.jobs.welcome_job:send_trial_followups",
+      "args": ["user-6", ["user-7", "user-8"]]
+    }
+  ],
+  "http_requests": [
+    {
+      "method": "POST",
+      "path": "/api/users"
+    },
+    {
+      "method": "GET",
+      "path": "/api/users/42"
+    },
+    {
+      "method": "GET",
+      "path": "/api/users"
+    }
+  ],
+  "openapi_requests": [
+    {
+      "method": "POST",
+      "path": "/api/orders",
+      "body": {
+        "product_id": "sku-legacy",
+        "quantity": 2
+      }
+    }
+  ],
+  "graphql_operations": [
+    {
+      "file": "frontend/src/graphql/legacy_queries.graphql",
+      "operation": "LegacyGetUser",
+      "variables": {
+        "id": "user-3"
+      }
+    },
+    {
+      "file": "frontend/src/graphql/legacy_queries.graphql",
+      "operation": "LegacyListUsers",
+      "variables": {}
+    },
+    {
+      "file": "frontend/src/graphql/legacy_queries.graphql",
+      "operation": "LegacyCreateUser",
+      "variables": {
+        "input": {
+          "name": "Grace",
+          "email": "grace@example.com"
+        }
+      }
+    },
+    {
+      "file": "frontend/src/graphql/legacy_queries.graphql",
+      "operation": "LegacyGetUserProfile",
+      "variables": {
+        "id": "user-3"
+      }
+    }
+  ],
+  "proto_fields": [
+    {
+      "message": "OrderRequest",
+      "fields": ["product_id", "quantity", "priority"]
+    },
+    {
+      "message": "OrderResponse",
+      "fields": ["id", "product_id", "quantity", "priority", "status"]
+    }
+  ],
+  "source_contains": [
+    {
+      "file": "frontend/src/api/legacy_users.ts",
+      "needles": ["/api/users"]
+    },
+    {
+      "file": "frontend/src/api/legacy_orders.ts",
+      "needles": ["product_id", "quantity"]
+    },
+    {
+      "file": "frontend/src/graphql/legacy_queries.graphql",
+      "needles": ["avatar", "CreateUserInput"]
+    },
+    {
+      "file": "services/order/legacy_client.go",
+      "needles": ["Priority:", "resp.Priority"]
+    }
+  ]
+}

@@ -1,32 +1,41 @@
-import axios from "axios";
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
 
 export interface User {
   id: number;
   name: string;
   email: string;
-  avatar?: string;
 }
 
 export async function createUser(name: string, email: string): Promise<User> {
-  const response = await axios.post("/api/users", { name, email });
-  return response.data;
+  const response = await fetch(`${API_BASE}/api/users`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ name, email }),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to create user: ${response.statusText}`);
+  }
+
+  return response.json();
 }
 
 export async function getUser(id: number): Promise<User> {
-  const response = await axios.get("/api/users/" + id);
-  return response.data;
+  const response = await fetch(`${API_BASE}/api/users/${id}`);
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch user: ${response.statusText}`);
+  }
+
+  return response.json();
 }
 
 export async function listUsers(): Promise<User[]> {
-  const response = await axios.get("/api/users");
-  return response.data;
-}
+  const response = await fetch(`${API_BASE}/api/users`);
 
-export async function updateUser(id: number, updates: Partial<User>): Promise<User> {
-  const response = await axios.patch("/api/users/" + id, updates);
-  return response.data;
-}
+  if (!response.ok) {
+    throw new Error(`Failed to list users: ${response.statusText}`);
+  }
 
-export async function deleteUser(id: number): Promise<void> {
-  await axios.delete("/api/users/" + id);
+  return response.json();
 }

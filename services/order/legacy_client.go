@@ -9,28 +9,28 @@ import (
 	"google.golang.org/grpc"
 )
 
-type Client struct {
+type LegacyClient struct {
 	conn   *grpc.ClientConn
 	client pb.OrderServiceClient
 }
 
-func NewClient(addr string) (*Client, error) {
+func NewLegacyClient(addr string) (*LegacyClient, error) {
 	conn, err := grpc.Dial(addr, grpc.WithInsecure())
 	if err != nil {
 		return nil, fmt.Errorf("failed to connect to order service: %w", err)
 	}
 
-	return &Client{
+	return &LegacyClient{
 		conn:   conn,
 		client: pb.NewOrderServiceClient(conn),
 	}, nil
 }
 
-func (c *Client) Close() error {
+func (c *LegacyClient) Close() error {
 	return c.conn.Close()
 }
 
-func (c *Client) CreateOrder(ctx context.Context, productID string, quantity int32, priority string) (*pb.OrderResponse, error) {
+func (c *LegacyClient) CreateOrder(ctx context.Context, productID string, quantity int32, priority string) (*pb.OrderResponse, error) {
 	req := &pb.OrderRequest{
 		ProductId: productID,
 		Quantity:  quantity,
@@ -48,10 +48,28 @@ func (c *Client) CreateOrder(ctx context.Context, productID string, quantity int
 	return resp, nil
 }
 
-func (c *Client) GetOrder(ctx context.Context, id int64) (*pb.OrderResponse, error) {
+func (c *LegacyClient) GetOrder(ctx context.Context, id int64) (*pb.OrderResponse, error) {
 	resp, err := c.client.GetOrder(ctx, &pb.GetOrderRequest{Id: id})
 	if err != nil {
 		return nil, fmt.Errorf("GetOrder RPC failed: %w", err)
 	}
+
+	log.Printf("Fetched order %d with priority=%s", resp.Id, resp.Priority)
 	return resp, nil
+}
+
+func (c *LegacyClient) CreateBulkOrders(ctx context.Context, items []struct {
+	ProductID string
+	Quantity  int32
+	Priority  string
+}) ([]*pb.OrderResponse, error) {
+	var results []*pb.OrderResponse
+	for _, item := range items {
+		resp, err := c.CreateOrder(ctx, item.ProductID, item.Quantity, item.Priority)
+		if err != nil {
+			return results, fmt.Errorf("bulk order failed at product %s: %w", item.ProductID, err)
+		}
+		results = append(results, resp)
+	}
+	return results, nil
 }
