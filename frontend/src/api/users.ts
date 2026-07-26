@@ -4,13 +4,18 @@ export interface User {
   id: number;
   name: string;
   email: string;
+  role: string;
 }
 
-export async function createUser(name: string, email: string): Promise<User> {
-  const response = await fetch(`${API_BASE}/api/users`, {
+export async function createUser(
+  name: string,
+  email: string,
+  role: string
+): Promise<User> {
+  const response = await fetch(`${API_BASE}/api/v2/users`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ name, email }),
+    body: JSON.stringify({ name, email, role }),
   });
 
   if (!response.ok) {
@@ -21,7 +26,7 @@ export async function createUser(name: string, email: string): Promise<User> {
 }
 
 export async function getUser(id: number): Promise<User> {
-  const response = await fetch(`${API_BASE}/api/users/${id}`);
+  const response = await fetch(`${API_BASE}/api/v2/users/${id}`);
 
   if (!response.ok) {
     throw new Error(`Failed to fetch user: ${response.statusText}`);
@@ -31,7 +36,7 @@ export async function getUser(id: number): Promise<User> {
 }
 
 export async function listUsers(): Promise<User[]> {
-  const response = await fetch(`${API_BASE}/api/users`);
+  const response = await fetch(`${API_BASE}/api/v2/users`);
 
   if (!response.ok) {
     throw new Error(`Failed to list users: ${response.statusText}`);

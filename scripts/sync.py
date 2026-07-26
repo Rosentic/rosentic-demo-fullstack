@@ -10,7 +10,7 @@ def sync_users():
     base_url = "http://localhost:8080"
 
     # Fetch user list
-    resp = requests.get(f"{base_url}/api/users")
+    resp = requests.get(f"{base_url}/api/v2/users")
     resp.raise_for_status()
     users = resp.json()
 
@@ -19,7 +19,7 @@ def sync_users():
     # Fetch each user detail
     for user in users:
         user_id = user["id"]
-        detail = requests.get(f"{base_url}/api/users/{user_id}")
+        detail = requests.get(f"{base_url}/api/v2/users/{user_id}")
         detail.raise_for_status()
         print(f"  Synced user {user_id}: {detail.json()['name']}")
 

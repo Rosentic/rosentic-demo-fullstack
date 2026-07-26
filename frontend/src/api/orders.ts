@@ -10,6 +10,7 @@ export interface Order {
 export interface CreateOrderPayload {
   product_id: string;
   quantity: number;
+  shipping_address: string;
 }
 
 export async function createOrder(
@@ -21,6 +22,7 @@ export async function createOrder(
     body: JSON.stringify({
       product_id: payload.product_id,
       quantity: payload.quantity,
+      shipping_address: payload.shipping_address,
     }),
   });
 

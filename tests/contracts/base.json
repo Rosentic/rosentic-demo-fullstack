@@ -3,12 +3,12 @@
   "python_calls": [
     {
       "call": "backend.services.notifications:send_notification",
-      "args": ["user-1", "Welcome"],
+      "args": ["user-1", "Welcome", "email"],
       "expected": true
     },
     {
       "call": "backend.services.notifications:send_bulk_notifications",
-      "args": [["user-1", "user-2"], "Welcome"],
+      "args": [["user-1", "user-2"], "Welcome", "email"],
       "expected": {
         "user-1": true,
         "user-2": true
@@ -16,25 +16,26 @@
     },
     {
       "call": "backend.services.user_service:create_user",
-      "args": ["Ada", "ada@example.com"],
+      "args": ["Ada", "ada@example.com", "admin"],
       "expected_subset": {
         "name": "Ada",
-        "email": "ada@example.com"
+        "email": "ada@example.com",
+        "role": "admin"
       }
     }
   ],
   "http_requests": [
     {
       "method": "POST",
-      "path": "/api/users"
+      "path": "/api/v2/users"
     },
     {
       "method": "GET",
-      "path": "/api/users/42"
+      "path": "/api/v2/users/42"
     },
     {
       "method": "GET",
-      "path": "/api/users"
+      "path": "/api/v2/users"
     }
   ],
   "openapi_requests": [
@@ -43,7 +44,8 @@
       "path": "/api/orders",
       "body": {
         "product_id": "sku-1",
-        "quantity": 2
+        "quantity": 2,
+        "shipping_address": "123 Main Street"
       }
     }
   ],
@@ -66,7 +68,8 @@
       "variables": {
         "input": {
           "name": "Ada",
-          "email": "ada@example.com"
+          "email": "ada@example.com",
+          "role": "admin"
         }
       }
     }
@@ -74,26 +77,25 @@
   "proto_fields": [
     {
       "message": "OrderRequest",
-      "fields": ["product_id", "quantity", "priority"]
+      "fields": ["product_id", "quantity"]
     },
     {
       "message": "OrderResponse",
-      "fields": ["id", "product_id", "quantity", "priority", "status"]
+      "fields": ["id", "product_id", "quantity", "status"]
     }
   ],
   "source_contains": [
     {
       "file": "frontend/src/api/users.ts",
-      "needles": ["/api/users"]
+      "needles": ["/api/v2/users", "role"]
     },
     {
       "file": "frontend/src/api/orders.ts",
-      "needles": ["product_id", "quantity"]
+      "needles": ["product_id", "quantity", "shipping_address"]
     },
     {
       "file": "services/order/client.go",
-      "needles": ["Priority:", "resp.Priority"]
+      "needles": ["ProductId:", "Quantity:"]
     }
   ]
 }
-

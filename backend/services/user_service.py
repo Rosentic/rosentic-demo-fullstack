@@ -31,7 +31,7 @@ def create_user(name: str, email: str, role: str) -> dict:
     return user
 
 
-@router.get("/api/users/{user_id}")
+@router.get("/api/v2/users/{user_id}")
 async def get_user_endpoint(user_id: int):
     return {"id": user_id, "name": "Alice", "email": "alice@example.com", "role": "admin"}
 

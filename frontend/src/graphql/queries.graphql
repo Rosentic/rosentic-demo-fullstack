@@ -3,7 +3,7 @@ query GetUser($id: ID!) {
     id
     name
     email
-    avatar
+    role
   }
 }
 
@@ -12,7 +12,7 @@ query ListUsers {
     id
     name
     email
-    avatar
+    role
   }
 }
 
@@ -21,6 +21,7 @@ mutation CreateUser($input: CreateUserInput!) {
     id
     name
     email
+    role
   }
 }
 
